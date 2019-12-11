@@ -1,7 +1,7 @@
 # DATA_ANALYSIS_IN_SQL
 The database consists of revenue categorized by different media types and artists across different countries and cities. 
 
-Some of the questions answered are:
+Analysis Questions:
 
 1) How can a company increase its revenue ? Which media type and country should the company focus on ?
 2) Planning a successful musical concert - 
