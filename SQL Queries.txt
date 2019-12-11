@@ -1,0 +1,84 @@
+/* Query 1- Revenue across Media Types */
+
+
+SELECT
+  SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity) Revenue,
+  MediaType.Name Media_type
+FROM InvoiceLine
+JOIN Track
+  ON InvoiceLine.TrackId = Track.TrackId
+JOIN MediaType
+  ON Track.MediaTypeId = MediaType.MediaTypeId
+GROUP BY MediaType.Name
+ORDER BY Revenue DESC;
+
+
+/* Query 2- Country-Wise revenue of MPEG Audio file */
+
+
+SELECT
+  SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity) countrywise_revenue,
+  Invoice.BillingCountry country_name
+FROM Invoice
+JOIN InvoiceLine
+  ON Invoice.InvoiceId = InvoiceLine.InvoiceId
+JOIN Track
+  ON InvoiceLine.TrackId = Track.TrackId
+JOIN MediaType
+  ON Track.MediaTypeId = MediaType.MediaTypeId
+WHERE MediaType.Name = 'MPEG audio file'
+GROUP BY country_name
+ORDER BY countrywise_revenue DESC
+LIMIT 10;
+
+
+/* Query 3- Top 10 cities in terms of MPEG audio file revenue */
+
+
+SELECT
+  SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity) revenue,
+  Invoice.BillingCity city_name
+FROM Invoice
+JOIN InvoiceLine
+  ON Invoice.InvoiceId = InvoiceLine.InvoiceId
+JOIN Track
+  ON InvoiceLine.TrackId = Track.TrackId
+JOIN MediaType
+  ON Track.MediaTypeId = MediaType.MediaTypeId
+WHERE MediaType.Name = 'MPEG audio file'
+GROUP BY city_name
+ORDER BY revenue DESC
+LIMIT 10;
+
+
+/* Query 4- Top 10 Artists across generes and cities */
+
+
+SELECT
+  Genre.Name Genre_name,
+  Artist.Name Artist_name,
+  COUNT(Genre.Name) Genre_freq
+FROM Customer
+JOIN Invoice
+  ON Invoice.CustomerId = Customer.CustomerId
+JOIN InvoiceLine
+  ON Invoice.InvoiceId = InvoiceLine.InvoiceId
+JOIN Track
+  ON InvoiceLine.TrackId = Track.TrackId
+JOIN Genre
+  ON Track.GenreId = Genre.GenreId
+JOIN MediaType
+  ON MediaType.MediaTypeId = Track.MediaTypeId
+JOIN Album
+  ON Album.AlbumId = Track.AlbumId
+JOIN Artist
+  ON Artist.ArtistId = Album.ArtistId
+WHERE Customer.City IN ('London', 'São Paulo', 'Berlin', 'Mountain View', 'Paris', 'Prague', 'Brussels', 'Halifax', 'Madrid', 'Ottawa')
+AND MediaType.Name = 'MPEG audio file'
+GROUP BY Genre_name,
+         Artist_name
+ORDER BY Genre_freq DESC
+LIMIT 10;
+
+
+
